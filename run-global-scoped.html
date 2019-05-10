@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>global-scoped</title>
+
+  <link href="./styles/shared.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="console-container"></div>
+
+  <script src="./scripts/shared.js"></script>
+  <script>
+  'use strict';
+  
+  const logger = new Logger(document.querySelector('.console-container'));
+
+  // Initialize
+  console.time("initialize");
+  const size = 10000000;
+  const a = new Array(size).fill(0).map((v, i) => i);
+  const records = {
+    "for": [],
+    "for-of": [],
+    "forEach": [],
+    "map": [],
+    "reduce": []
+  };
+  console.timeEnd("initialize");
+
+  // for
+  for (let i = 0; i < 10; i++) {
+    let sum = 0;
+    const start = Date.now();
+    console.time("for");
+    for (let j = 0; j < size; j++) {
+      sum += a[j];
+    }
+    console.timeEnd("for");
+    const end = Date.now();
+    console.debug(`for result: ${sum}`);
+
+    records["for"][i - 1] = [start, end];
+  }
+
+  // for-of
+  for (let i = 0; i < 10; i++) {
+    let sum = 0;
+    const start = Date.now();
+    console.time("for-of");
+    for (const v of a) {
+      sum += v;
+    }
+    console.timeEnd("for-of");
+    const end = Date.now();
+    console.debug(`for-of result: ${sum}`);
+
+    records["for-of"][i - 1] = [start, end];
+  }
+
+  // forEach
+  for (let i = 0; i < 10; i++) {
+    let sum = 0;
+    const start = Date.now();
+    console.time("forEach");
+    a.forEach(v => sum += v);
+    console.timeEnd("forEach");
+    const end = Date.now();
+    console.debug(`forEach result: ${sum}`);
+
+    records["forEach"][i - 1] = [start, end];
+  }
+
+  // map
+  for (let i = 0; i < 10; i++) {
+    let sum = 0;
+    const start = Date.now();
+    console.time("map");
+    a.map(v => sum += v);
+    console.timeEnd("map");
+    const end = Date.now();
+    console.debug(`map result: ${sum}`);
+
+    records["map"][i - 1] = [start, end];
+  }
+
+  // reduce
+  for (let i = 0; i < 10; i++) {
+    const start = Date.now();
+    console.time("reduce");
+    const sum = a.reduce((s, v) => s + v, 0);
+    console.timeEnd("reduce");
+    const end = Date.now();
+    console.debug(`reduce result: ${sum}`);
+
+    records["reduce"][i - 1] = [start, end];
+  }
+
+  // Result
+  showResult(records, logger);
+
+  </script>
+
+</body>
+</html>
